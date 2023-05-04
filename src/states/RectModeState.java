@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 public class RectModeState implements State {
+    private int instrumentSize = 1;
     private boolean dragging;
     private Color currentColor;
 
@@ -34,7 +35,7 @@ public class RectModeState implements State {
         mouseAdapter = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                rectDrawing = new RectDrawing(new Dot(e.getX(), e.getY()), currentColor);
+                rectDrawing = new RectDrawing(new Dot(e.getX(), e.getY()), currentColor, instrumentSize);
                 dragging = true;
             }
             @Override
@@ -80,5 +81,15 @@ public class RectModeState implements State {
     @Override
     public void setCurrentColor(Color currentColor) {
         this.currentColor = currentColor;
+    }
+
+    @Override
+    public int getInstrumentSize() {
+        return instrumentSize;
+    }
+
+    @Override
+    public void setInstrumentSize(int val) {
+        instrumentSize = val;
     }
 }

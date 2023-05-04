@@ -5,13 +5,15 @@ import utils.Dot;
 import java.awt.*;
 
 public class RectDrawing implements Action {
+    int instrumentSize;
     Dot startDot;
     Dot endDot;
     Color color;
 
-    public RectDrawing(Dot initPos, Color color) {
+    public RectDrawing(Dot initPos, Color color, int instrumentSize) {
         startDot = initPos;
         this.color = color;
+        this.instrumentSize = instrumentSize;
     }
 
     public void update(Dot pos) {
@@ -23,7 +25,7 @@ public class RectDrawing implements Action {
         if (startDot == null || endDot == null) return;
 
         g.setColor(color);
-        ((Graphics2D) g).setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        ((Graphics2D) g).setStroke(new BasicStroke(instrumentSize, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
 
         int width = endDot.getX() - startDot.getX();
         int height = endDot.getY() - startDot.getY();

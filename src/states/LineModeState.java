@@ -13,7 +13,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 public class LineModeState implements State {
+    private int instrumentSize = 1;
     private boolean dragging;
+    private boolean mouseIn;
     private Color currentColor;
 
     GraphicsProvider graphicsProvider;
@@ -32,8 +34,19 @@ public class LineModeState implements State {
 
         mouseAdapter = new MouseAdapter() {
             @Override
+            public void mouseEntered(MouseEvent e) {
+                mouseIn = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                mouseIn = false;
+                graphicsProvider.addAfterRepaintAction(null);
+                graphicsProvider.repaint();
+            }
+            @Override
             public void mousePressed(MouseEvent e) {
-                lineDrawing = new LineDrawing(new Dot(e.getX(), e.getY()), currentColor);
+                lineDrawing = new LineDrawing(new Dot(e.getX(), e.getY()), currentColor, instrumentSize);
                 dragging = true;
             }
             @Override
@@ -44,6 +57,24 @@ public class LineModeState implements State {
         };
 
         mouseMotionAdapter = new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if (mouseIn && !dragging) {
+                    graphicsProvider.addAfterRepaintAction(new AfterRepaintAction() {
+                        @Override
+                        public void perform(Graphics g) {
+                            g.setColor(currentColor);
+                            g.fillOval(e.getX()  - instrumentSize / 2, e.getY() - instrumentSize / 2,
+                                    instrumentSize, instrumentSize);
+                        }
+                    });
+                } else {
+                    graphicsProvider.addAfterRepaintAction(null);
+                }
+
+                graphicsProvider.repaint();
+            }
+
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (dragging) {
@@ -79,5 +110,15 @@ public class LineModeState implements State {
     @Override
     public void setCurrentColor(Color currentColor) {
         this.currentColor = currentColor;
+    }
+
+    @Override
+    public int getInstrumentSize() {
+        return instrumentSize;
+    }
+
+    @Override
+    public void setInstrumentSize(int val) {
+        instrumentSize = val;
     }
 }

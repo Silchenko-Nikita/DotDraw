@@ -3,10 +3,39 @@ package ui;
 import javax.swing.*;
 import java.awt.*;
 
-public class AppFrame extends JFrame implements MenuActionHandler {
+interface MenuActionHandler {
+    void handleMenuAction(MenuAction menuAction);
+}
+
+interface ValActionHandler {
+    void handleValAction(ValAction type, Object val);
+}
+
+enum ValAction {
+    INSTRUMENT_SIZE
+}
+
+enum MenuAction {
+    SAVE_TO_FILE,
+    UNDO,
+    REDO,
+    EXIT,
+    CLEAR_CANVAS,
+    CHOOSE_FILL,
+    CHOOSE_PENCIL,
+    CHOOSE_BRUSH,
+    CHOOSE_LINE,
+    CHOOSE_RECT,
+    CHOOSE_FILLED_RECT,
+    CHOOSE_OVAL,
+    CHOOSE_FILLED_OVAL,
+    CHOOSE_COLOR
+}
+
+public class AppFrame extends JFrame implements MenuActionHandler, ValActionHandler {
 
     private MenuBar menuBar;
-
+    private OptionsPanel optionsPanel;
     private CanvasPanel canvas;
 
     public AppFrame() {
@@ -15,7 +44,11 @@ public class AppFrame extends JFrame implements MenuActionHandler {
         menuBar = new MenuBar(this);
         setJMenuBar(menuBar);
 
+        optionsPanel = new OptionsPanel(this);
         canvas = new CanvasPanel();
+        canvas.setDoubleBuffered(true);
+
+        getContentPane().add(optionsPanel, BorderLayout.NORTH);
         getContentPane().add(canvas, BorderLayout.CENTER);
 
         setSize(640, 480);
@@ -61,12 +94,24 @@ public class AppFrame extends JFrame implements MenuActionHandler {
             case CHOOSE_FILLED_RECT -> {
                 canvas.switchDrawingMode(DrawingMode.FILLED_RECT);
             }
+            case CHOOSE_OVAL -> {
+                canvas.switchDrawingMode(DrawingMode.OVAL);
+            }
             case CHOOSE_FILLED_OVAL -> {
                 canvas.switchDrawingMode(DrawingMode.FILLED_OVAL);
             }
             case CHOOSE_COLOR -> {
                 canvas.setCurrentColor(JColorChooser.showDialog(null,
                         "Choose a color", canvas.getCurrentColor()));
+            }
+        }
+    }
+
+    @Override
+    public void handleValAction(ValAction type, Object val) {
+        switch (type) {
+            case INSTRUMENT_SIZE -> {
+                canvas.setInstrumentSize((Integer)val);
             }
         }
     }

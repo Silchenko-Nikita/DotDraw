@@ -15,6 +15,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 
 public class FillModeState implements State {
+    private int instrumentSize = 1;
     private boolean pressed;
     private Color currentColor;
 
@@ -56,7 +57,7 @@ public class FillModeState implements State {
                     }
                 }
 
-                filling = new Filling(bitmap, new Dot(e.getX(), e.getY()), currentColor);
+                filling = new Filling(bitmap, new Dot(e.getX(), e.getY()), currentColor, instrumentSize);
                 actionFinishHandler.setFinishedAction(filling);
                 graphicsProvider.repaint();
             }
@@ -81,5 +82,15 @@ public class FillModeState implements State {
     @Override
     public void setCurrentColor(Color currentColor) {
         this.currentColor = currentColor;
+    }
+
+    @Override
+    public int getInstrumentSize() {
+        return instrumentSize;
+    }
+
+    @Override
+    public void setInstrumentSize(int val) {
+        instrumentSize = val;
     }
 }

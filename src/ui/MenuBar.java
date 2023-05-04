@@ -7,26 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-interface MenuActionHandler {
-    void handleMenuAction(MenuAction menuAction);
-}
-
-enum MenuAction {
-    SAVE_TO_FILE,
-    UNDO,
-    REDO,
-    EXIT,
-    CLEAR_CANVAS,
-    CHOOSE_FILL,
-    CHOOSE_PENCIL,
-    CHOOSE_BRUSH,
-    CHOOSE_LINE,
-    CHOOSE_RECT,
-    CHOOSE_FILLED_RECT,
-    CHOOSE_FILLED_OVAL,
-    CHOOSE_COLOR
-}
-
 public class MenuBar extends JMenuBar implements ActionListener {
     private JMenu fileMenu;
     private JMenu editMenu;
@@ -40,6 +20,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
     private JMenuItem lineMenuItem;
     private JMenuItem rectMenuItem;
     private JMenuItem filledRectMenuItem;
+    private JMenuItem ovalMenuItem;
     private JMenuItem filledOvalMenuItem;
     private JMenuItem colorMenuItem;
 
@@ -70,7 +51,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         fillMenuItem.addActionListener(this);
         pencilMenuItem = new JMenuItem("Pencil");
         pencilMenuItem.addActionListener(this);
-        brushMenuItem = new JMenuItem("Brush");
+        brushMenuItem = new JMenuItem("Stencil");
         brushMenuItem.addActionListener(this);
         lineMenuItem = new JMenuItem("Line");
         lineMenuItem.addActionListener(this);
@@ -78,6 +59,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
         rectMenuItem.addActionListener(this);
         filledRectMenuItem = new JMenuItem("Filled rectangle");
         filledRectMenuItem.addActionListener(this);
+        ovalMenuItem = new JMenuItem("Oval");
+        ovalMenuItem.addActionListener(this);
         filledOvalMenuItem = new JMenuItem("Filled oval");
         filledOvalMenuItem.addActionListener(this);
         clearMenuItem = new JMenuItem("Clear");
@@ -88,6 +71,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         optionsMenu.add(lineMenuItem);
         optionsMenu.add(rectMenuItem);
         optionsMenu.add(filledRectMenuItem);
+        optionsMenu.add(ovalMenuItem);
         optionsMenu.add(filledOvalMenuItem);
         optionsMenu.add(clearMenuItem);
 
@@ -126,6 +110,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
             actionHandler.handleMenuAction(MenuAction.CHOOSE_RECT);
         }  else if (source == filledRectMenuItem) {
             actionHandler.handleMenuAction(MenuAction.CHOOSE_FILLED_RECT);
+        }  else if (source == ovalMenuItem) {
+            actionHandler.handleMenuAction(MenuAction.CHOOSE_OVAL);
         }  else if (source == filledOvalMenuItem) {
             actionHandler.handleMenuAction(MenuAction.CHOOSE_FILLED_OVAL);
         } else if (source == colorMenuItem) {

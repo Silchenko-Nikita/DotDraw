@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 public class FilledOvalModeState implements State {
+    private int instrumentSize = 1;
     private boolean dragging;
     private Color currentColor;
 
@@ -33,7 +34,7 @@ public class FilledOvalModeState implements State {
         mouseAdapter = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                rectDrawing = new FilledOvalDrawing(new Dot(e.getX(), e.getY()), currentColor);
+                rectDrawing = new FilledOvalDrawing(new Dot(e.getX(), e.getY()), currentColor, instrumentSize);
                 dragging = true;
             }
             @Override
@@ -79,5 +80,15 @@ public class FilledOvalModeState implements State {
     @Override
     public void setCurrentColor(Color currentColor) {
         this.currentColor = currentColor;
+    }
+
+    @Override
+    public int getInstrumentSize() {
+        return instrumentSize;
+    }
+
+    @Override
+    public void setInstrumentSize(int val) {
+        instrumentSize = val;
     }
 }

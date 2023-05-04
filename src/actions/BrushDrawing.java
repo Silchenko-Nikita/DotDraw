@@ -7,12 +7,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class BrushDrawing implements Action {
+    int instrumentSize;
     List<Dot> dots;
     boolean showBounds = false;
 
-    public BrushDrawing(Dot initPos) {
+    public BrushDrawing(Dot initPos, int instrumentSize) {
         dots = new LinkedList<>();
         dots.add(initPos);
+        this.instrumentSize = instrumentSize;
     }
 
     public void update(Dot pos) {
@@ -24,7 +26,7 @@ public class BrushDrawing implements Action {
         if (dots.isEmpty()) return;
 
         g.setColor(Color.WHITE);
-        ((Graphics2D) g).setStroke(new BasicStroke(10, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        ((Graphics2D) g).setStroke(new BasicStroke(instrumentSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
         var iterator = dots.iterator();
         Dot prevDot = iterator.next();
@@ -35,10 +37,10 @@ public class BrushDrawing implements Action {
 
             if (showBounds && !iterator.hasNext()) {
                 g.setColor(Color.BLACK);
-                g.fillOval(currentDot.getX() - 5, currentDot.getY() - 5, 10, 10);
+                g.fillOval(currentDot.getX() - instrumentSize / 2, currentDot.getY() - instrumentSize / 2, instrumentSize, instrumentSize);
 
                 g.setColor(Color.WHITE);
-                g.fillOval(currentDot.getX()  - 5 + 1, currentDot.getY() - 5 + 1, 8, 8);
+                g.fillOval(currentDot.getX()  - instrumentSize / 2 + 1, currentDot.getY() - instrumentSize / 2 + 1, instrumentSize - 2, instrumentSize - 2);
             }
 
             prevDot = currentDot;

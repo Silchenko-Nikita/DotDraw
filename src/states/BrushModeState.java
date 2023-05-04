@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 public class BrushModeState implements State {
+    private int instrumentSize = 1;
     private boolean mouseIn;
     private boolean dragging;
     GraphicsProvider graphicsProvider;
@@ -41,7 +42,7 @@ public class BrushModeState implements State {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                brushDrawing = new BrushDrawing(new Dot(e.getX(), e.getY()));
+                brushDrawing = new BrushDrawing(new Dot(e.getX(), e.getY()), instrumentSize);
 
                 brushDrawing.setShowBounds(true);
                 dragging = true;
@@ -49,18 +50,18 @@ public class BrushModeState implements State {
             @Override
             public void mouseReleased(MouseEvent e) {
                 dragging = false;
-                actionFinishHandler.setFinishedAction(brushDrawing);
                 brushDrawing.setShowBounds(false);
+                actionFinishHandler.setFinishedAction(brushDrawing);
 
                 if (mouseIn) {
                     graphicsProvider.addAfterRepaintAction(new AfterRepaintAction() {
                         @Override
                         public void perform(Graphics g) {
                             g.setColor(Color.BLACK);
-                            g.fillOval(e.getX() - 5, e.getY() - 5, 10, 10);
+                            g.fillOval(e.getX() - instrumentSize / 2, e.getY() - instrumentSize / 2, instrumentSize, instrumentSize);
 
                             g.setColor(Color.WHITE);
-                            g.fillOval(e.getX()  - 5 + 1, e.getY() - 5 + 1, 8, 8);
+                            g.fillOval(e.getX()  - instrumentSize / 2 + 1, e.getY() - instrumentSize / 2 + 1, instrumentSize - 2, instrumentSize - 2);
                         }
                     });
                 } else {
@@ -79,10 +80,10 @@ public class BrushModeState implements State {
                         @Override
                         public void perform(Graphics g) {
                             g.setColor(Color.BLACK);
-                            g.fillOval(e.getX() - 5, e.getY() - 5, 10, 10);
+                            g.fillOval(e.getX() - instrumentSize / 2, e.getY() - instrumentSize / 2, instrumentSize, instrumentSize);
 
                             g.setColor(Color.WHITE);
-                            g.fillOval(e.getX()  - 5 + 1, e.getY() - 5 + 1, 8, 8);
+                            g.fillOval(e.getX()  - instrumentSize / 2 + 1, e.getY() - instrumentSize / 2 + 1, instrumentSize - 2, instrumentSize - 2);
                         }
                     });
 
@@ -124,5 +125,15 @@ public class BrushModeState implements State {
 
     @Override
     public void setCurrentColor(Color currentColor) {
+    }
+
+    @Override
+    public int getInstrumentSize() {
+        return instrumentSize;
+    }
+
+    @Override
+    public void setInstrumentSize(int val) {
+        instrumentSize = val;
     }
 }
