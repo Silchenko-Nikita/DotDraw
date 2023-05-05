@@ -44,7 +44,7 @@ public class AppFrame extends JFrame implements MenuActionHandler, ValActionHand
         menuBar = new MenuBar(this);
         setJMenuBar(menuBar);
 
-        optionsPanel = new OptionsPanel(this);
+        optionsPanel = new OptionsPanel(this, this);
         canvas = new CanvasPanel();
         canvas.setDoubleBuffered(true);
 
@@ -101,8 +101,15 @@ public class AppFrame extends JFrame implements MenuActionHandler, ValActionHand
                 canvas.switchDrawingMode(DrawingMode.FILLED_OVAL);
             }
             case CHOOSE_COLOR -> {
-                canvas.setCurrentColor(JColorChooser.showDialog(null,
-                        "Choose a color", canvas.getCurrentColor()));
+                Color colour = JColorChooser.showDialog(null, "Choose a color", canvas.getCurrentColor());
+                canvas.setCurrentColor(colour);
+                Component[] components = optionsPanel.getComponents();
+                for (int i = 0; i < components.length; i++) {
+                    var name = components[i].getName();
+                    if (name != null && name.equals("colourchange")) {
+                        components[i].setBackground(colour);
+                    }
+                }
             }
         }
     }

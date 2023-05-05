@@ -1,11 +1,8 @@
 package ui;
 
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 public class MenuBar extends JMenuBar implements ActionListener {
     private JMenu fileMenu;
@@ -51,7 +48,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         fillMenuItem.addActionListener(this);
         pencilMenuItem = new JMenuItem("Pencil");
         pencilMenuItem.addActionListener(this);
-        brushMenuItem = new JMenuItem("Stencil");
+        brushMenuItem = new JMenuItem("Eraser");
         brushMenuItem.addActionListener(this);
         lineMenuItem = new JMenuItem("Line");
         lineMenuItem.addActionListener(this);
