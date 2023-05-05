@@ -35,6 +35,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
         fileMenu.add(saveToFileMenuItem);
         fileMenu.add(exitMenuItem);
 
+        /* TEMP HIDES MENUS */
+        /*
         editMenu = new JMenu("Edit");
         undoMenuItem = new JMenuItem("Undo");
         undoMenuItem.addActionListener(this);
@@ -74,11 +76,11 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
         colorMenuItem = new JMenuItem("Color");
         colorMenuItem.addActionListener(this);
-        optionsMenu.add(colorMenuItem);
+        optionsMenu.add(colorMenuItem); */
 
-        add(fileMenu);
+        add(fileMenu);/*
         add(editMenu);
-        add(optionsMenu);
+        add(optionsMenu); */
     }
 
     @Override

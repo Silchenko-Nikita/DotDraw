@@ -35,7 +35,7 @@ enum MenuAction {
 public class AppFrame extends JFrame implements MenuActionHandler, ValActionHandler {
 
     private MenuBar menuBar;
-    private OptionsPanel optionsPanel;
+    private ToolsPanel toolsPanel;
     private CanvasPanel canvas;
 
     public AppFrame() {
@@ -44,11 +44,12 @@ public class AppFrame extends JFrame implements MenuActionHandler, ValActionHand
         menuBar = new MenuBar(this);
         setJMenuBar(menuBar);
 
-        optionsPanel = new OptionsPanel(this, this);
+        toolsPanel = new ToolsPanel(this, this);
+        toolsPanel.setFloatable(false);
         canvas = new CanvasPanel();
         canvas.setDoubleBuffered(true);
 
-        getContentPane().add(optionsPanel, BorderLayout.NORTH);
+        getContentPane().add(toolsPanel, BorderLayout.NORTH);
         getContentPane().add(canvas, BorderLayout.CENTER);
 
         setSize(640, 480);
@@ -103,7 +104,7 @@ public class AppFrame extends JFrame implements MenuActionHandler, ValActionHand
             case CHOOSE_COLOR -> {
                 Color colour = JColorChooser.showDialog(null, "Choose a color", canvas.getCurrentColor());
                 canvas.setCurrentColor(colour);
-                Component[] components = optionsPanel.getComponents();
+                Component[] components = toolsPanel.getComponents();
                 for (int i = 0; i < components.length; i++) {
                     var name = components[i].getName();
                     if (name != null && name.equals("colourchange")) {
