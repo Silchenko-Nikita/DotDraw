@@ -6,87 +6,70 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultFormatter;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static ui.ValAction.INSTRUMENT_SIZE;
-
-public class OptionsPanel extends JPanel implements ChangeListener, ActionListener {
+public class ToolsPanel extends JToolBar implements ChangeListener, ActionListener {
     JSpinner spinner;
     ValActionHandler actionHandler;
 
-    private JMenuItem fillMenuItem;
-    private JMenuItem clearMenuItem;
-    private JMenuItem pencilMenuItem;
-    private JMenuItem brushMenuItem;
-    private JMenuItem lineMenuItem;
-    private JMenuItem rectMenuItem;
-    private JMenuItem filledRectMenuItem;
-    private JMenuItem ovalMenuItem;
-    private JMenuItem filledOvalMenuItem;
-    private JMenuItem colorMenuItem;
-    private JMenuItem undoMenuItem, redoMenuItem;
+    private JButton fillMenuItem;
+    private JButton clearMenuItem;
+    private JButton pencilMenuItem;
+    private JButton brushMenuItem;
+    private JButton lineMenuItem;
+    private JButton rectMenuItem;
+    private JButton filledRectMenuItem;
+    private JButton ovalMenuItem;
+    private JButton filledOvalMenuItem;
+    private JButton colorMenuItem;
+    private JButton undoMenuItem, redoMenuItem;
     MenuActionHandler actionHandlerM;
 
-    public OptionsPanel(ValActionHandler actionHandler, MenuActionHandler actionHandlerM) {
+    public ToolsPanel(ValActionHandler actionHandler, MenuActionHandler actionHandlerM) {
         this.actionHandler = actionHandler;
         this.actionHandlerM = actionHandlerM;
 
+        //spinner setup
         JLabel label = new JLabel("Size:");
         SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 99, 1);
-
         spinner = new JSpinner(model);
         JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spinner.getEditor();
         JFormattedTextField textField = editor.getTextField();
         DefaultFormatter formatter = (DefaultFormatter) textField.getFormatter();
-        //editor.getTextField().setEditable(false);
-        //editor.getTextField().setCaretPosition(1);
         formatter.setAllowsInvalid(false);
         formatter.setCommitsOnValidEdit(true);
-
         spinner.getModel().addChangeListener(this);
+        spinner.setMaximumSize(spinner.getPreferredSize());
 
-        //menu items
-        JLabel label_tools = new JLabel("Tools:");
-        undoMenuItem = new JMenuItem("", new ImageIcon("src/ui/icons/undo.png"));
+        //tool buttons setup
+        undoMenuItem = new JButton("", new ImageIcon("src/ui/icons/undo.png"));
         undoMenuItem.addActionListener(this);
-        undoMenuItem.setPreferredSize(new Dimension(20, undoMenuItem.getPreferredSize().height));
-        redoMenuItem = new JMenuItem("", new ImageIcon("src/ui/icons/redo.png"));
+        redoMenuItem = new JButton("", new ImageIcon("src/ui/icons/redo.png"));
         redoMenuItem.addActionListener(this);
-        redoMenuItem.setPreferredSize(new Dimension(20, redoMenuItem.getPreferredSize().height));
-
-        fillMenuItem = new JMenuItem("", new ImageIcon("src/ui/icons/fill.png"));
+        //
+        fillMenuItem = new JButton("", new ImageIcon("src/ui/icons/fill.png"));
         fillMenuItem.addActionListener(this);
-        fillMenuItem.setPreferredSize(new Dimension(20, fillMenuItem.getPreferredSize().height));
-        pencilMenuItem = new JMenuItem("", new ImageIcon("src/ui/icons/pencil.png"));
+        pencilMenuItem = new JButton("", new ImageIcon("src/ui/icons/pencil.png"));
         pencilMenuItem.addActionListener(this);
-        pencilMenuItem.setPreferredSize(new Dimension(20, pencilMenuItem.getPreferredSize().height));
-        brushMenuItem = new JMenuItem("", new ImageIcon("src/ui/icons/eraser.png"));
+        brushMenuItem = new JButton("", new ImageIcon("src/ui/icons/eraser.png"));
         brushMenuItem.addActionListener(this);
-        brushMenuItem.setPreferredSize(new Dimension(20, brushMenuItem.getPreferredSize().height));
-        lineMenuItem = new JMenuItem("", new ImageIcon("src/ui/icons/line.png"));
+        lineMenuItem = new JButton("", new ImageIcon("src/ui/icons/line.png"));
         lineMenuItem.addActionListener(this);
-        lineMenuItem.setPreferredSize(new Dimension(20, lineMenuItem.getPreferredSize().height));
-        rectMenuItem = new JMenuItem("", new ImageIcon("src/ui/icons/rect.png"));
+        rectMenuItem = new JButton("", new ImageIcon("src/ui/icons/rect.png"));
         rectMenuItem.addActionListener(this);
-        rectMenuItem.setPreferredSize(new Dimension(20, rectMenuItem.getPreferredSize().height));
-        filledRectMenuItem = new JMenuItem("", new ImageIcon("src/ui/icons/rect_fill.png"));
+        filledRectMenuItem = new JButton("", new ImageIcon("src/ui/icons/rect_fill.png"));
         filledRectMenuItem.addActionListener(this);
-        filledRectMenuItem.setPreferredSize(new Dimension(20, filledRectMenuItem.getPreferredSize().height));
-        ovalMenuItem = new JMenuItem("", new ImageIcon("src/ui/icons/oval.png"));
+        ovalMenuItem = new JButton("", new ImageIcon("src/ui/icons/oval.png"));
         ovalMenuItem.addActionListener(this);
-        ovalMenuItem.setPreferredSize(new Dimension(20, ovalMenuItem.getPreferredSize().height));
-        filledOvalMenuItem = new JMenuItem("", new ImageIcon("src/ui/icons/oval_fill.png"));
+        filledOvalMenuItem = new JButton("", new ImageIcon("src/ui/icons/oval_fill.png"));
         filledOvalMenuItem.addActionListener(this);
-        filledOvalMenuItem.setPreferredSize(new Dimension(20, filledOvalMenuItem.getPreferredSize().height));
-        clearMenuItem = new JMenuItem("", new ImageIcon("src/ui/icons/clear.png"));
+        clearMenuItem = new JButton("", new ImageIcon("src/ui/icons/clear.png"));
         clearMenuItem.addActionListener(this);
-        clearMenuItem.setPreferredSize(new Dimension(20, clearMenuItem.getPreferredSize().height));
-        
-        JLabel label_separator = new JLabel("|");
-        JLabel label_separator_1 = new JLabel("|");
-        colorMenuItem = new JMenuItem("");
+
+        //setup tool bar layout
+        colorMenuItem = new JButton("");
         colorMenuItem.setName("colourchange");
         colorMenuItem.setBackground(Color.BLACK);
         colorMenuItem.setOpaque(true);
@@ -94,7 +77,7 @@ public class OptionsPanel extends JPanel implements ChangeListener, ActionListen
 
         add(undoMenuItem);
         add(redoMenuItem);
-        add(label_tools);
+        addSeparator();
         add(fillMenuItem);
         add(pencilMenuItem);
         add(brushMenuItem);
@@ -103,13 +86,12 @@ public class OptionsPanel extends JPanel implements ChangeListener, ActionListen
         add(filledRectMenuItem);
         add(ovalMenuItem);
         add(filledOvalMenuItem);
+        addSeparator();
         add(clearMenuItem);
-        add(label_separator);
-
+        addSeparator();
         add(label);
         add(spinner);
-
-        add(label_separator_1);
+        addSeparator();
         add(colorMenuItem);
     }
 
