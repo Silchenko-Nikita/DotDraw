@@ -45,6 +45,7 @@ public class AppFrame extends JFrame implements MenuActionHandler, ValActionHand
         setJMenuBar(menuBar);
 
         toolsPanel = new ToolsPanel(this, this);
+        toolsPanel.setFloatable(false);
         canvas = new CanvasPanel();
         canvas.setDoubleBuffered(true);
 
