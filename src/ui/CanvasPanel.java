@@ -2,12 +2,15 @@ package ui;
 
 import actions.Action;
 import actions.ActionFinishHandler;
+import org.w3c.dom.Text;
 import states.*;
 import utils.Dot;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -21,18 +24,22 @@ enum DrawingMode {
     RECT,
     FILLED_RECT,
     OVAL,
-    FILLED_OVAL
+    FILLED_OVAL,
+    TEXT,
+    COLOR_PICKER
 }
 
 public class CanvasPanel extends JPanel implements GraphicsProvider, ActionFinishHandler {
-    static RegularDrawingModeState regularDrawingModeState;
-    static FillModeState fillModeState;
-    static BrushModeState brushModeState;
-    static LineModeState lineModeState;
-    static RectModeState rectModeState;
-    static FilledRectModeState filledRectModeState;
-    static OvalModeState ovalModeState;
-    static FilledOvalModeState filledOvalModeState;
+    final RegularDrawingModeState regularDrawingModeState;
+    final FillModeState fillModeState;
+    final BrushModeState brushModeState;
+    final LineModeState lineModeState;
+    final RectModeState rectModeState;
+    final FilledRectModeState filledRectModeState;
+    final OvalModeState ovalModeState;
+    final FilledOvalModeState filledOvalModeState;
+    final TextModeState textModeState;
+    final ColorPickerModeState colorPickerModeState;
 
     static ArrayList<State> states;
 
@@ -41,11 +48,15 @@ public class CanvasPanel extends JPanel implements GraphicsProvider, ActionFinis
     private Stack<Action> actions;
     private Stack<Action> undoneActions;
 
-
+    AppFrame appFrame;
     private State currentState;
     private AfterRepaintAction afterRepaintAction = null;
 
-    CanvasPanel() {
+    CanvasPanel(AppFrame appFrame) {
+        super();
+
+        this.appFrame = appFrame;
+
         {
             regularDrawingModeState = new RegularDrawingModeState(this, this, Color.BLACK);
             fillModeState = new FillModeState(this, this, Color.BLACK);
@@ -55,6 +66,8 @@ public class CanvasPanel extends JPanel implements GraphicsProvider, ActionFinis
             filledRectModeState = new FilledRectModeState(this, this, Color.BLACK);
             ovalModeState = new OvalModeState(this, this, Color.BLACK);
             filledOvalModeState = new FilledOvalModeState(this, this, Color.BLACK);
+            textModeState = new TextModeState(this, this, Color.BLACK);
+            colorPickerModeState = new ColorPickerModeState(this, this);
 
             states = new ArrayList<>();
             states.add(regularDrawingModeState);
@@ -65,6 +78,8 @@ public class CanvasPanel extends JPanel implements GraphicsProvider, ActionFinis
             states.add(filledRectModeState);
             states.add(ovalModeState);
             states.add(filledOvalModeState);
+            states.add(textModeState);
+            states.add(colorPickerModeState);
         }
 
         images = new Stack<>();
@@ -86,6 +101,13 @@ public class CanvasPanel extends JPanel implements GraphicsProvider, ActionFinis
         for (State state: states) {
             state.setCurrentColor(currentColor);
         }
+
+        repaint();
+    }
+
+    public void setCurrentColorFromPicker(Color currentColor) {
+        setCurrentColor(currentColor);
+        appFrame.setColor(currentColor);
     }
 
     public int getInstrumentSize() {
@@ -96,6 +118,8 @@ public class CanvasPanel extends JPanel implements GraphicsProvider, ActionFinis
         for (State state: states) {
             state.setInstrumentSize(val);
         }
+
+        repaint();
     }
 
     public void switchDrawingMode(DrawingMode drawingMode) {
@@ -124,6 +148,21 @@ public class CanvasPanel extends JPanel implements GraphicsProvider, ActionFinis
             case FILLED_OVAL -> {
                 applyState(filledOvalModeState);
             }
+            case TEXT -> {
+                Font currentFont = getGraphics().getFont();
+                int fontSize = currentFont.getSize();
+                textModeState.setFontSize(fontSize);
+                applyState(textModeState);
+                addKeyListener(textModeState.keyAdapter);
+            }
+            case COLOR_PICKER -> {
+                applyState(colorPickerModeState);
+            }
+        }
+
+        if (drawingMode != DrawingMode.TEXT) {
+            textModeState.textPlacing = null;
+            removeKeyListener(textModeState.keyAdapter);
         }
     }
 

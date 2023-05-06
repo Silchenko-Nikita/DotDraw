@@ -1,8 +1,10 @@
 import ui.AppFrame;
 
+import javax.swing.*;
+
 public class Main {
 
     public static void main(String[] args) {
-        new AppFrame();
+        SwingUtilities.invokeLater(AppFrame::new);
     }
 }

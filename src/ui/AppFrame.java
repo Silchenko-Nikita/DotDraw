@@ -2,6 +2,8 @@ package ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 interface MenuActionHandler {
     void handleMenuAction(MenuAction menuAction);
@@ -29,7 +31,9 @@ enum MenuAction {
     CHOOSE_FILLED_RECT,
     CHOOSE_OVAL,
     CHOOSE_FILLED_OVAL,
-    CHOOSE_COLOR
+    CHOOSE_COLOR,
+    CHOOSE_TEXT,
+    CHOOSE_COLOR_PICKER
 }
 
 public class AppFrame extends JFrame implements MenuActionHandler, ValActionHandler {
@@ -46,11 +50,16 @@ public class AppFrame extends JFrame implements MenuActionHandler, ValActionHand
 
         toolsPanel = new ToolsPanel(this, this);
         toolsPanel.setFloatable(false);
-        canvas = new CanvasPanel();
+        canvas = new CanvasPanel(this);
         canvas.setDoubleBuffered(true);
+        canvas.setFocusable(true);
 
         getContentPane().add(toolsPanel, BorderLayout.NORTH);
         getContentPane().add(canvas, BorderLayout.CENTER);
+
+        SwingUtilities.invokeLater(() -> {
+            canvas.requestFocus();
+        });
 
         setSize(640, 480);
         setResizable(false);
@@ -101,18 +110,22 @@ public class AppFrame extends JFrame implements MenuActionHandler, ValActionHand
             case CHOOSE_FILLED_OVAL -> {
                 canvas.switchDrawingMode(DrawingMode.FILLED_OVAL);
             }
+            case CHOOSE_TEXT -> {
+                canvas.switchDrawingMode(DrawingMode.TEXT);
+            }
+            case CHOOSE_COLOR_PICKER -> {
+                canvas.switchDrawingMode(DrawingMode.COLOR_PICKER);
+            }
             case CHOOSE_COLOR -> {
-                Color colour = JColorChooser.showDialog(null, "Choose a color", canvas.getCurrentColor());
-                canvas.setCurrentColor(colour);
-                Component[] components = toolsPanel.getComponents();
-                for (int i = 0; i < components.length; i++) {
-                    var name = components[i].getName();
-                    if (name != null && name.equals("colourchange")) {
-                        components[i].setBackground(colour);
-                    }
-                }
+                Color color = JColorChooser.showDialog(null, "Choose a color", canvas.getCurrentColor());
+                canvas.setCurrentColor(color);
+                setColor(color);
             }
         }
+    }
+
+    public void setColor(Color color) {
+        toolsPanel.getColorChooser().setBackground(color);
     }
 
     @Override
